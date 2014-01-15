@@ -1,0 +1,36 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE struts PUBLIC "-//Apache Software Foundation//DTD Struts Configuration 2.1//EN" "http://struts.apache.org/dtds/struts-2.1.dtd">
+<struts>
+   <constant name="struts.multipart.maxSize" value="100000000"/>
+   <constant name="struts.multipart.saveDir" value="/tmp"/>
+   <package name="service" namespace="/" extends="json-default">
+      
+      <action name="ConsumeList" class="com.owner.service.action.AndroidService" method="getConsumeList">
+         <result type="json" />
+      </action>
+      
+      <action name="IncomeList" class="com.owner.service.action.AndroidService" method="getIncomeList">
+         <result type="json" />
+      </action>
+      
+      <action name="EmbarrassList" class="com.owner.service.action.AndroidService" method="getEmbarrassList">
+         <result type="json" />
+      </action>
+      
+      <action name="Upload" class="com.owner.service.action.AndroidService" method="getUploadFile">
+         <result type="stream" />
+      </action>
+      
+      <action name="ConsumeUpload" class="com.owner.service.action.AndroidService" method="consumeUpload">
+         <result type="stream" />
+      </action>
+      
+      <action name="IncomeUpload" class="com.owner.service.action.AndroidService" method="incomeUpload">
+         <result type="stream" />
+      </action>
+      
+      <action name="LoadMorePictures" class="com.owner.service.action.AndroidService" method="loadMorePicture">
+         <result type="stream" />
+      </action>
+   </package>
+</struts>    
