@@ -172,60 +172,67 @@ public class EmbarrassDetailActivity extends Activity {
 	{
 		String title=embarrassTitle.getText().toString();//标题字段
 		String desc=embarrassDesc.getText().toString();//描述字段
-		HttpClientService svr = new HttpClientService(AppConstants.RequestUpLoadAction,true);//上传访问的地址
-		//参数
-		Embarrass embarrass=new Embarrass();
-		embarrass.setEdesc(desc);
-		embarrass.setEtitle(title);
-		embarrass.setUid(AppConstants.USER_ID);
-		svr.addParameter("embarrass",GsonUtil.getGson().toJson(embarrass));
-		/*svr.addParameter("title",title);
-		svr.addParameter("desc",desc);
-		svr.addParameter("picCount",picLists.size());*/
-		if(picLists.size()>0)
+		if(title!=null&&title!=""&&!title.equals("")&&!title.equals(null))
 		{
-			Log.e("图片张数", picLists.size()+"");
-			for(int i=0;i<picLists.size();i++)
+			HttpClientService svr = new HttpClientService(AppConstants.RequestUpLoadAction,true);//上传访问的地址
+			//参数
+			Embarrass embarrass=new Embarrass();
+			embarrass.setEdesc(desc);
+			embarrass.setEtitle(title);
+			embarrass.setUid(AppConstants.USER_ID);
+			svr.addParameter("embarrass",GsonUtil.getGson().toJson(embarrass));
+			/*svr.addParameter("title",title);
+			svr.addParameter("desc",desc);
+			svr.addParameter("picCount",picLists.size());*/
+			if(picLists.size()>0)
 			{
-				String fpath=picLists.get(i);
-				//String path=picLists.get(i).substring(0,picLists.get(i).lastIndexOf("/"));
-				//String name=fpath.substring(fpath.lastIndexOf("/")+1, fpath.length());
-				File ffff=new File(fpath);
-				//Log.e("上传图片的路径", path);
-				//Log.e("上传图片的名字", name);
-				svr.addParameter("pictures",ffff);
+				Log.e("图片张数", picLists.size()+"");
+				for(int i=0;i<picLists.size();i++)
+				{
+					String fpath=picLists.get(i);
+					//String path=picLists.get(i).substring(0,picLists.get(i).lastIndexOf("/"));
+					//String name=fpath.substring(fpath.lastIndexOf("/")+1, fpath.length());
+					File ffff=new File(fpath);
+					//Log.e("上传图片的路径", path);
+					//Log.e("上传图片的名字", name);
+					svr.addParameter("pictures",ffff);
+				}
 			}
+			
+			
+			HttpAndroidTask task = new HttpAndroidTask(context, svr,
+					new HttpResponseHandler() {
+						// 响应事件
+						public void onResponse(Object obj) {
+							pdialog.stop();
+							JsonEntity jsonEntity = GsonUtil.parseObj2JsonEntity(
+									obj,context,false);
+							if (jsonEntity.getStatus() == 1) {
+								Toast.makeText(context, "没有可查看的数据", 2).show();
+							} else if (jsonEntity.getStatus() == 0) {
+								Toast.makeText(context, "提交成功", 2).show();
+								/*datalist=GsonUtil.getGson().fromJson(jsonEntity.getData(), AppConstants.type_movieList);
+								adapter=new ConsumeAndIncomeAdapter(context, datalist);
+								consumeListView.setAdapter(adapter);*/
+								clearAll();
+								finish();
+							}else
+							{
+								Toast.makeText(context, "服务器数据出错", 2).show();
+							}
+						}
+					}, new HttpPreExecuteHandler() {
+						public void onPreExecute(Context context) {
+							pdialog = new MyProgressDialog(context);
+							pdialog.start("上传数据中...");
+						}
+					});
+			task.execute(new String[] {});
+		}else
+		{
+			Toast.makeText(context, "标题是必须的", 2).show();
 		}
 		
-		
-		HttpAndroidTask task = new HttpAndroidTask(context, svr,
-				new HttpResponseHandler() {
-					// 响应事件
-					public void onResponse(Object obj) {
-						pdialog.stop();
-						JsonEntity jsonEntity = GsonUtil.parseObj2JsonEntity(
-								obj,context,false);
-						if (jsonEntity.getStatus() == 1) {
-							Toast.makeText(context, "没有可查看的数据", 2).show();
-						} else if (jsonEntity.getStatus() == 0) {
-							Toast.makeText(context, "提交成功", 2).show();
-							/*datalist=GsonUtil.getGson().fromJson(jsonEntity.getData(), AppConstants.type_movieList);
-							adapter=new ConsumeAndIncomeAdapter(context, datalist);
-							consumeListView.setAdapter(adapter);*/
-							clearAll();
-							finish();
-						}else
-						{
-							Toast.makeText(context, "服务器数据出错", 2).show();
-						}
-					}
-				}, new HttpPreExecuteHandler() {
-					public void onPreExecute(Context context) {
-						pdialog = new MyProgressDialog(context);
-						pdialog.start("上传数据中...");
-					}
-				});
-		task.execute(new String[] {});
 	}
 	
 	private OnClickListener l=new OnClickListener() {

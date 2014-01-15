@@ -150,39 +150,45 @@ public class IncomeDetailActivity extends Activity {
 		List<Income> incomes=new ArrayList<Income>();//上传的一个列表
 		try {
 			parseModule(incomes);//把提交的数据封装到list当中
-			/*
-			 * 上传访问的地址  
-			 *   true 有File文件要上传  
-			 *   false无File文件要上传
-			 */
-			HttpClientService svr = new HttpClientService(AppConstants.IncomeUpLoadAction,true);
-			//参数
-			svr.addParameter("incomes",GsonUtil.getGson().toJson(incomes));
-			
-			HttpAndroidTask task = new HttpAndroidTask(context, svr,
-					new HttpResponseHandler() {
-						// 响应事件
-						public void onResponse(Object obj) {
-							pdialog.stop();
-							JsonEntity jsonEntity = GsonUtil.parseObj2JsonEntity(
-									obj,context,false);
-							if (jsonEntity.getStatus() == 1) {
-								Toast.makeText(context, "提交数据失败", 2).show();
-							} else if (jsonEntity.getStatus() == 0) {
-								Toast.makeText(context, "提交成功", 2).show();
-								finish();
-							}else
-							{
-								Toast.makeText(context, "服务器出错", 2).show();
+			if(incomes!=null&&incomes.size()>0)
+			{
+				/*
+				 * 上传访问的地址  
+				 *   true 有File文件要上传  
+				 *   false无File文件要上传
+				 */
+				HttpClientService svr = new HttpClientService(AppConstants.IncomeUpLoadAction,true);
+				//参数
+				svr.addParameter("incomes",GsonUtil.getGson().toJson(incomes));
+				
+				HttpAndroidTask task = new HttpAndroidTask(context, svr,
+						new HttpResponseHandler() {
+							// 响应事件
+							public void onResponse(Object obj) {
+								pdialog.stop();
+								JsonEntity jsonEntity = GsonUtil.parseObj2JsonEntity(
+										obj,context,false);
+								if (jsonEntity.getStatus() == 1) {
+									Toast.makeText(context, "提交数据失败", 2).show();
+								} else if (jsonEntity.getStatus() == 0) {
+									Toast.makeText(context, "提交成功", 2).show();
+									finish();
+								}else
+								{
+									Toast.makeText(context, "服务器出错", 2).show();
+								}
 							}
-						}
-					}, new HttpPreExecuteHandler() {
-						public void onPreExecute(Context context) {
-							pdialog = new MyProgressDialog(context);
-							pdialog.start("提交数据中...");
-						}
-					});
-			task.execute(new String[] {});
+						}, new HttpPreExecuteHandler() {
+							public void onPreExecute(Context context) {
+								pdialog = new MyProgressDialog(context);
+								pdialog.start("提交数据中...");
+							}
+						});
+				task.execute(new String[] {});
+			}else{
+				Toast.makeText(context, "无有价值的数据可上传", 2).show();
+			}
+			
 		} catch (Exception e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
@@ -206,11 +212,14 @@ public class IncomeDetailActivity extends Activity {
 			 */
 			String name=textView.getText().toString().split(":")[0].trim();//得到项的名称
 			String money=editText.getText().toString().trim();//得到输入的数量
-			//封装
-			income.setUid(uid);
-			income.setName(name);
-			income.setMoney(Double.valueOf(money));
-			incomes.add(income);//加入列表
+			if(money!=null&&money!=""&&!money.equals(null)&&!money.equals(""))
+			{
+				//封装
+				income.setUid(uid);
+				income.setName(name);
+				income.setMoney(Double.valueOf(money));
+				incomes.add(income);//加入列表
+			}			
 		}
 	}
 

@@ -47,7 +47,8 @@ public class Utils {
 		textView1.setText(context.getString(R.string.upload_consume_income_unit));
 		
 		Button button=new Button(context);
-		button.setText(context.getString(R.string.upload_consume_income_unit_delete));
+		button.setBackgroundResource(R.drawable.onebit_32);
+		//button.setText(context.getString(R.string.upload_consume_income_unit_delete));
 		button.setOnClickListener(new OnClickListener() {
 			
 			@Override
