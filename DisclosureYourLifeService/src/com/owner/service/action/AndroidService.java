@@ -6,8 +6,6 @@ import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
-import java.net.InetAddress;
-import java.net.UnknownHostException;
 import java.util.ArrayList;
 import java.util.List;
 import javax.servlet.http.HttpServletRequest;
@@ -34,9 +32,7 @@ import com.owner.impl.IPictureDAOImpl;
 import com.owner.tools.GsonTool;
 
 public class AndroidService extends ActionSupport implements ServletRequestAware, ServletResponseAware {
-    /**
-	 * 
-	 */
+ 
 	private static final long serialVersionUID = 1L;
 	private HttpServletResponse response;
 	private HttpServletRequest request;
@@ -147,7 +143,7 @@ public class AndroidService extends ActionSupport implements ServletRequestAware
     {
 		int eid=0;//插入返回的主键ID
 		final String path =ServletActionContext.getServletContext().getRealPath("/");
-		final String spath="http://192.168.0.101:8080/DisclosureYourLife/";// 图片所在服务器的路径
+		final String spath="http://192.168.1.150:8080/DisclosureYourLife/";// 图片所在服务器的路径
 		
 		List<Picture> pics=new ArrayList<Picture>();//保存上传图片的路径
 		Embarrass em=GsonTool.getGson().fromJson(embarrass,GsonTool.type_embarrass);
